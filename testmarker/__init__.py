@@ -31,9 +31,26 @@ class _Marker:
         self.is_skip = False
 
     def __call__(self, test_item):
+        setattr(test_item, _MARKED_ATTR_NAME, self.name)  # xxx
+
         if self.is_skip is None:
             self.is_skip = self.fn(self, default=self.default)
         return unittest.skipIf(self.is_skip, self.reason)(test_item)
+
+
+_MARKED_ATTR_NAME = "_marked"
+
+
+def _apply_force_skip_testcase(message, cls=unittest.TestCase):
+    originalSetupClass = cls.setUpClass.__func__
+
+    @classmethod
+    def new(cls):
+        if _MARKED_ATTR_NAME not in cls.__dict__:
+            raise unittest.SkipTest(message)
+        return originalSetupClass(cls)
+
+    cls.setUpClass = new
 
 
 class Repository:
@@ -73,15 +90,19 @@ class Manager:
 
     def create_marker(self, name, *, description=None, skip=None):
         return self.repository.create_marker(name, description=description, skip=skip)
+
     __call__ = create_marker
 
-    def only(self, names):
+    def only(self, names, *, skip_unmarked=False, msg="by --only option"):
         for name in names:
             self.repository.register_action(name, "skip_deactivate")
         self.repository.register_action("", "skip_activate")
         for marker in self:
             if marker.name in names:
                 marker.skip_deactivate()
+
+        if skip_unmarked:
+            _apply_force_skip_testcase(msg)
 
     def ignore(self, names):
         for name in names:

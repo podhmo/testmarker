@@ -36,3 +36,8 @@ class Test4(unittest.TestCase):
 class Test5(unittest.TestCase):
     def test_it(self):
         pass
+
+
+class Test6(unittest.TestCase):
+    def test_it(self):
+        pass

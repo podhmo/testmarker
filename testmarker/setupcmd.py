@@ -20,7 +20,7 @@ class test(_test):
     def run(self):
         markers = self.get_markers()
         if self.only is not None:
-            markers.only([x.strip() for x in self.only.split(",")])
+            markers.only([x.strip() for x in self.only.split(",")], skip_unmarked=True)
         elif self.ignore is not None:
             markers.ignore([x.strip() for x in self.ignore.split(",")])
         return super().run()
