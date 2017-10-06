@@ -5,19 +5,23 @@ import unittest
 logger = logging.getLogger(__name__)
 
 
-def lookup_environ_skip_status(marker):
+def lookup_environ_skip_status(marker, default=False):
     name = marker.name.upper()
+    is_not_skip = os.environ.get(name)
+    if is_not_skip is not None:
+        return not bool(is_not_skip)
     is_skip = os.environ.get("NO_" + name)
     if is_skip is not None:
         return bool(is_skip)
-    return False
+    return default
 
 
 class _Marker:
-    def __init__(self, name, fn, *, description=None):
+    def __init__(self, name, fn, *, description=None, skip=None):
         self.name = name
         self.reason = description or name
         self.fn = fn
+        self.default = skip
         self.is_skip = None
 
     def skip_activate(self):
@@ -28,7 +32,7 @@ class _Marker:
 
     def __call__(self, test_item):
         if self.is_skip is None:
-            self.is_skip = self.fn(self)
+            self.is_skip = self.fn(self, default=self.default)
         return unittest.skipIf(self.is_skip, self.reason)(test_item)
 
 
@@ -45,8 +49,8 @@ class Repository:
     def markers(self):
         return self.pool.values()
 
-    def create_marker(self, name, *, description=None):
-        marker = self.pool[name] = _Marker(name, fn=self.fn, description=description)
+    def create_marker(self, name, *, description=None, skip=False):
+        marker = self.pool[name] = _Marker(name, fn=self.fn, description=description, skip=skip)
         if name in self.registered_actions:
             getattr(marker, self.registered_actions[name])()
         elif "" in self.registered_actions:
@@ -67,8 +71,9 @@ class Manager:
         except KeyError:
             raise AttributeError(name)
 
-    def create_marker(self, name, *, description=None):
-        return self.repository.create_marker(name, description=description)
+    def create_marker(self, name, *, description=None, skip=None):
+        return self.repository.create_marker(name, description=description, skip=skip)
+    __call__ = create_marker
 
     def only(self, names):
         for name in names:
@@ -100,4 +105,4 @@ class FluffyManager(Manager):
         self.__class__ = Manager
 
 
-markers = FluffyManager(Repository(lookup_environ_skip_status))
+mark = FluffyManager(Repository(lookup_environ_skip_status))

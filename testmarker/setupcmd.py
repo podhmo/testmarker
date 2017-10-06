@@ -14,8 +14,8 @@ class test(_test):
         super().initialize_options()
 
     def get_markers(self):
-        from testmarker import markers
-        return markers
+        from testmarker import mark
+        return mark
 
     def run(self):
         markers = self.get_markers()

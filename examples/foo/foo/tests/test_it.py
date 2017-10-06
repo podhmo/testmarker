@@ -1,32 +1,38 @@
 import unittest
-from testmarker import markers
+from testmarker import mark
 
 
-@markers.a
+@mark.a
 class Test0(unittest.TestCase):
     def test_it(self):
         pass
 
 
-@markers.b
+@mark.b
 class Test1(unittest.TestCase):
     def test_it(self):
         pass
 
 
-@markers.c
+@mark.c
 class Test2(unittest.TestCase):
     def test_it(self):
         pass
 
 
-@markers.d
+@mark.d
 class Test3(unittest.TestCase):
     def test_it(self):
         pass
 
 
-@markers.e
+@mark.e
 class Test4(unittest.TestCase):
+    def test_it(self):
+        pass
+
+
+@mark("f", description="f is default skipped", skip=True)
+class Test5(unittest.TestCase):
     def test_it(self):
         pass

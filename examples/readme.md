@@ -15,11 +15,12 @@ test_it (foo.tests.test_it.Test1) ... skipped 'b'
 test_it (foo.tests.test_it.Test2) ... skipped 'c'
 test_it (foo.tests.test_it.Test3) ... ok
 test_it (foo.tests.test_it.Test4) ... ok
+test_it (foo.tests.test_it.Test5) ... skipped 'f is default skipped'
 
 ----------------------------------------------------------------------
-Ran 5 tests in 0.000s
+Ran 6 tests in 0.000s
 
-OK (skipped=3)
+OK (skipped=4)
 ```
 
 only
@@ -39,9 +40,10 @@ test_it (foo.tests.test_it.Test1) ... ok
 test_it (foo.tests.test_it.Test2) ... skipped 'c'
 test_it (foo.tests.test_it.Test3) ... skipped 'd'
 test_it (foo.tests.test_it.Test4) ... skipped 'e'
+test_it (foo.tests.test_it.Test5) ... skipped 'f is default skipped'
 
 ----------------------------------------------------------------------
-Ran 5 tests in 0.000s
+Ran 6 tests in 0.000s
 
-OK (skipped=3)
+OK (skipped=4)
 ```
