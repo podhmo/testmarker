@@ -1,5 +1,5 @@
 import unittest
-from . import markers
+from testmarker import markers
 
 
 @markers.a
