@@ -16,9 +16,11 @@ class WithMarkerTestProgram(TestProgram):
         args = self._discovery_parser.parse_args()
         markers = self.get_markers()
         if args.only is not None:
-            markers.only(args.only, skip_unmarked=True)
+            names = [name.strip() for x in args.only for name in x.split(",")]
+            markers.only(names, skip_unmarked=True)
         elif args.ignore is not None:
-            markers.ignore(args.only)
+            names = [name.strip() for x in args.ignore for name in x.split(",")]
+            markers.ignore(names)
         if args.start is None:
             args.start = "discover"
         return super()._do_discovery(argv, Loader=Loader)

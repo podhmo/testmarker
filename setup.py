@@ -1,5 +1,4 @@
 import os
-import sys
 
 from setuptools import setup, find_packages
 here = os.path.abspath(os.path.dirname(__file__))
@@ -13,7 +12,9 @@ except IOError:
 
 install_requires = []
 
-docs_extras = []
+docs_extras = [
+    "kamidana",
+]
 
 tests_require = []
 
@@ -21,7 +22,7 @@ testing_extras = tests_require + []
 
 setup(
     name='testmarker',
-    version='0.0',
+    version='0.1.0',
     description='marker for unittest (stdlib)',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[
