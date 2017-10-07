@@ -4,8 +4,15 @@ testmarker
 Marker library for unittest.
 
 
+install
+----------------------------------------
+
+.. code-block::
+
+  pip install testmarker
+
 run tests with marker
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------
 
 Running tests like a `python -m unittest discover`.
 
@@ -54,7 +61,7 @@ Running tests like a `python -m unittest discover`.
   make[1]: Leaving directory '$HOME/my/testmarker/examples'
 
 marker setting
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------
 
 examples/foo/foo/tests/test_it.py
 
