@@ -51,10 +51,14 @@ def _apply_force_skip_testcase(fmt, cls=unittest.TestCase):
     @classmethod
     def new(cls):
         if _MARKED_ATTR_NAME not in cls.__dict__:
-            if not any(
-                hasattr(attr, _MARKED_ATTR_NAME) for name, attr in cls.__dict__.items()
-                if name.startswith("test") and callable(attr)
-            ):
+            skip_class = True
+            for name, attr in cls.__dict__.items():
+                if name.startswith("test") and callable(attr):
+                    if hasattr(attr, _MARKED_ATTR_NAME):
+                        skip_class = False
+                    else:
+                        setattr(cls, name, unittest.skip(fmt.format("{}.{}".format(cls.__name__, name)))(attr))
+            if skip_class:
                 raise unittest.SkipTest(fmt.format(cls.__name__))
         return originalSetupClass(cls)
 
