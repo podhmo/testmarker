@@ -45,13 +45,17 @@ class _Marker:
 _MARKED_ATTR_NAME = "_marked"
 
 
-def _apply_force_skip_testcase(message, cls=unittest.TestCase):
+def _apply_force_skip_testcase(fmt, cls=unittest.TestCase):
     originalSetupClass = cls.setUpClass.__func__
 
     @classmethod
     def new(cls):
         if _MARKED_ATTR_NAME not in cls.__dict__:
-            raise unittest.SkipTest(message)
+            if not any(
+                hasattr(attr, _MARKED_ATTR_NAME) for name, attr in cls.__dict__.items()
+                if name.startswith("test") and callable(attr)
+            ):
+                raise unittest.SkipTest(fmt.format(cls.__name__))
         return originalSetupClass(cls)
 
     cls.setUpClass = new
@@ -97,7 +101,7 @@ class Manager:
 
     __call__ = create_marker
 
-    def only(self, names, *, skip_unmarked=False, msg="by --only option"):
+    def only(self, names, *, skip_unmarked=False, fmt="{} is skipped by --only option"):
         for name in names:
             self.repository.register_action(name, "skip_deactivate")
         self.repository.register_action("", "skip_activate")
@@ -106,7 +110,7 @@ class Manager:
                 marker.skip_deactivate()
 
         if skip_unmarked:
-            _apply_force_skip_testcase(msg)
+            _apply_force_skip_testcase(fmt)
 
     def ignore(self, names):
         for name in names:

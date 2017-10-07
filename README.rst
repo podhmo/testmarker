@@ -52,7 +52,7 @@ Running tests like a `python -m unittest discover`.
   test_it (foo.tests.test_it.Test3) ... skipped 'd'
   test_it (foo.tests.test_it.Test4) ... skipped 'e'
   test_it (foo.tests.test_it.Test5) ... skipped 'f is default skipped'
-  skipped 'by --only option'
+  skipped 'Test6 is skipped by --only option'
   
   ----------------------------------------------------------------------
   Ran 6 tests in 0.000s
