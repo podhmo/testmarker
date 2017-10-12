@@ -2,6 +2,7 @@ import logging
 import os
 from collections import OrderedDict
 import unittest
+from unittest.loader import _FailedTest
 logger = logging.getLogger(__name__)
 
 
@@ -49,7 +50,10 @@ def _apply_force_skip_testcase(fmt, cls=unittest.TestCase):
     originalSetupClass = cls.setUpClass.__func__
 
     @classmethod
-    def new(cls):
+    def setup_class(cls):
+        if issubclass(cls, _FailedTest):
+            return originalSetupClass(cls)
+
         if _MARKED_ATTR_NAME not in cls.__dict__:
             skip_class = True
             for name, attr in cls.__dict__.items():
@@ -62,7 +66,7 @@ def _apply_force_skip_testcase(fmt, cls=unittest.TestCase):
                 raise unittest.SkipTest(fmt.format(cls.__name__))
         return originalSetupClass(cls)
 
-    cls.setUpClass = new
+    cls.setUpClass = setup_class
 
 
 class Repository:
